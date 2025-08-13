@@ -1,1654 +1,0 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام معلومات الطلبة - مدرسة الأمير حمزة الثانوية للبنين</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap');
-        
-        body {
-            font-family: 'Noto Sans Arabic', sans-serif;
-        }
-        
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .slide-in {
-            animation: slideIn 0.3s ease-out;
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
-        }
-        
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        
-        .card-shadow {
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-        
-        .input-focus:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-    </style>
-</head>
-<body class="bg-gray-50 min-h-screen">
-    <!-- Header -->
-    <header class="gradient-bg text-white py-6 shadow-lg">
-        <div class="container mx-auto px-4">
-            <div class="text-center">
-                <h1 class="text-3xl font-bold mb-2">🏫 مدرسة الأمير حمزة الثانوية للبنين</h1>
-                <p class="text-lg opacity-90">نظام إدارة معلومات الطلبة</p>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Container -->
-    <div class="container mx-auto px-4 py-8">
-        <!-- Navigation Tabs -->
-        <div class="bg-white rounded-lg shadow-md mb-8 card-shadow">
-            <div class="flex border-b">
-                <button onclick="showTab('student')" id="studentTab" class="flex-1 py-4 px-6 text-center font-semibold text-blue-600 border-b-2 border-blue-600 bg-blue-50">
-                    📝 تسجيل طالب جديد
-                </button>
-                <button onclick="showTab('teacher')" id="teacherTab" class="flex-1 py-4 px-6 text-center font-semibold text-gray-600 hover:text-blue-600 hover:bg-gray-50 transition-colors">
-                    👨‍🏫 تسجيل دخول المعلمين
-                </button>
-                <button onclick="showTab('admin')" id="adminTab" class="flex-1 py-4 px-6 text-center font-semibold text-gray-600 hover:text-blue-600 hover:bg-gray-50 transition-colors">
-                    🔐 تسجيل دخول المسؤولين
-                </button>
-                <button onclick="showTab('dashboard')" id="dashboardTab" class="flex-1 py-4 px-6 text-center font-semibold text-gray-600 hover:text-blue-600 hover:bg-gray-50 transition-colors">
-                    📊 لوحة التحكم
-                </button>
-            </div>
-        </div>
-
-        <!-- Student Registration Form -->
-        <div id="studentForm" class="fade-in">
-            <div class="bg-white rounded-lg shadow-lg p-8 card-shadow">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">📋 تسجيل طالب جديد</h2>
-                
-                <form id="studentRegistrationForm" class="space-y-6">
-                    <!-- Student Name -->
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">الاسم الأول</label>
-                            <input type="text" id="firstName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="أدخل الاسم الأول">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">اسم الأب</label>
-                            <input type="text" id="fatherName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="أدخل اسم الأب">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">اسم الجد</label>
-                            <input type="text" id="grandfatherName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="أدخل اسم الجد">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">اسم العائلة</label>
-                            <input type="text" id="familyName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="أدخل اسم العائلة">
-                        </div>
-                    </div>
-
-                    <!-- Grade and Section -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">الصف</label>
-                            <select id="grade" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" onchange="updateSections()">
-                                <option value="">اختر الصف</option>
-                                <option value="10">الصف العاشر</option>
-                                <option value="11">الصف الحادي عشر أكاديمي</option>
-                                <option value="12">الصف الثاني عشر أكاديمي</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">الشعبة</label>
-                            <select id="section" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                                <option value="">اختر الشعبة أولاً</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Birth Info -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">تاريخ الولادة</label>
-                            <input type="date" id="birthDate" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">مكان الولادة</label>
-                            <input type="text" id="birthPlace" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="أدخل مكان الولادة">
-                        </div>
-                    </div>
-
-                    <!-- Address and National ID -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">مكان السكن</label>
-                            <input type="text" id="address" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="أدخل مكان السكن">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">الرقم الوطني</label>
-                            <input type="text" id="nationalId" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="أدخل الرقم الوطني">
-                        </div>
-                    </div>
-
-                    <!-- Guardian Info -->
-                    <div class="bg-gray-50 p-6 rounded-lg">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">👨‍👩‍👧‍👦 معلومات ولي الأمر</h3>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">الاسم الأول</label>
-                                <input type="text" id="guardianFirstName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="اسم ولي الأمر الأول">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">اسم الأب</label>
-                                <input type="text" id="guardianFatherName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="اسم أب ولي الأمر">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">اسم الجد</label>
-                                <input type="text" id="guardianGrandfatherName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="اسم جد ولي الأمر">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">اسم العائلة</label>
-                                <input type="text" id="guardianFamilyName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="اسم عائلة ولي الأمر">
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">عمل ولي الأمر</label>
-                                <input type="text" id="guardianJob" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="أدخل عمل ولي الأمر">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">رقم هاتف ولي الأمر</label>
-                                <input type="tel" id="guardianPhone" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="أدخل رقم الهاتف">
-                            </div>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-lg transition-colors shadow-lg">
-                        ✅ تسجيل الطالب
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        <!-- Teacher Login Form -->
-        <div id="teacherForm" class="hidden">
-            <div class="bg-white rounded-lg shadow-lg p-8 card-shadow max-w-md mx-auto">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">👨‍🏫 تسجيل دخول المعلمين</h2>
-                
-                <form id="teacherLoginForm" class="space-y-6">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">البريد الإلكتروني</label>
-                        <input type="email" id="teacherEmail" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="أدخل البريد الإلكتروني">
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">كلمة المرور</label>
-                        <input type="password" id="teacherPassword" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="أدخل كلمة المرور">
-                    </div>
-
-                    <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-lg transition-colors shadow-lg">
-                        🔐 تسجيل الدخول
-                    </button>
-                </form>
-
-                <div class="mt-6 pt-6 border-t border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">📝 تسجيل معلم جديد</h3>
-                    <form id="teacherRegistrationForm" class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">اسم المعلم</label>
-                            <input type="text" id="newTeacherName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="أدخل اسم المعلم">
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">البريد الإلكتروني</label>
-                            <input type="email" id="newTeacherEmail" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="أدخل البريد الإلكتروني">
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">كلمة المرور</label>
-                            <input type="password" id="newTeacherPassword" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="أدخل كلمة المرور">
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">الصف المسؤول عنه</label>
-                            <select id="teacherGrade" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" onchange="updateTeacherSections()">
-                                <option value="">اختر الصف</option>
-                                <option value="10">الصف العاشر</option>
-                                <option value="11">الصف الحادي عشر أكاديمي</option>
-                                <option value="12">الصف الثاني عشر أكاديمي</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">الشعبة المسؤول عنها</label>
-                            <select id="teacherSection" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                                <option value="">اختر الشعبة أولاً</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">الرقم الوطني للمعلم</label>
-                            <input type="text" id="teacherNationalId" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="أدخل الرقم الوطني">
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">الرقم الوزاري</label>
-                            <input type="text" id="teacherMinistryId" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="أدخل الرقم الوزاري">
-                        </div>
-
-                        <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
-                            ➕ تسجيل معلم جديد
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Admin Login Form -->
-        <div id="adminForm" class="hidden">
-            <div class="bg-white rounded-lg shadow-lg p-8 card-shadow max-w-md mx-auto">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">🔐 تسجيل دخول المسؤولين</h2>
-                
-                <form id="adminLoginForm" class="space-y-6">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">اسم المستخدم</label>
-                        <input type="text" id="adminUsername" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="أدخل اسم المستخدم">
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">كلمة المرور</label>
-                        <input type="password" id="adminPassword" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" placeholder="أدخل كلمة المرور">
-                    </div>
-
-                    <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-6 rounded-lg transition-colors shadow-lg">
-                        🔐 تسجيل الدخول كمسؤول
-                    </button>
-                </form>
-
-                <div class="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                    <h4 class="font-semibold text-red-800 mb-2">🔒 تسجيل دخول المسؤولين</h4>
-                    <div class="text-sm text-red-700">
-                        <p><strong>تنبيه:</strong> هذا القسم مخصص للمسؤولين المعتمدين فقط</p>
-                        <p>يرجى إدخال بيانات الدخول الصحيحة المقدمة من إدارة المدرسة</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Dashboard -->
-        <div id="dashboard" class="hidden">
-            <!-- Admin Info Header -->
-            <div id="adminInfo" class="bg-gradient-to-r from-red-600 to-pink-600 text-white rounded-lg p-6 mb-6 card-shadow" style="display: none;">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h2 class="text-2xl font-bold mb-2">🔐 مرحباً <span id="adminName"></span></h2>
-                        <p class="text-lg opacity-90">مسؤول النظام - صلاحيات كاملة</p>
-                    </div>
-                    <button onclick="logout()" class="bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-lg transition-colors">
-                        🚪 تسجيل الخروج
-                    </button>
-                </div>
-            </div>
-
-            <!-- Teacher Info Header -->
-            <div id="teacherInfo" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg p-6 mb-6 card-shadow" style="display: none;">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h2 class="text-2xl font-bold mb-2">👨‍🏫 مرحباً <span id="teacherName"></span></h2>
-                        <p class="text-lg opacity-90">مسؤول عن الصف <span id="teacherGradeInfo"></span> - شعبة <span id="teacherSectionInfo"></span></p>
-                    </div>
-                    <button onclick="logout()" class="bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-lg transition-colors">
-                        🚪 تسجيل الخروج
-                    </button>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <div class="bg-white rounded-lg shadow-lg p-6 card-shadow">
-                    <div class="flex items-center">
-                        <div class="bg-blue-100 p-3 rounded-full">
-                            <span class="text-2xl">👥</span>
-                        </div>
-                        <div class="mr-4">
-                            <h3 class="text-lg font-semibold text-gray-800">طلبة شعبتي</h3>
-                            <p class="text-3xl font-bold text-blue-600" id="myStudents">0</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-lg shadow-lg p-6 card-shadow">
-                    <div class="flex items-center">
-                        <div class="bg-green-100 p-3 rounded-full">
-                            <span class="text-2xl">📊</span>
-                        </div>
-                        <div class="mr-4">
-                            <h3 class="text-lg font-semibold text-gray-800">إجمالي الطلبة</h3>
-                            <p class="text-3xl font-bold text-green-600" id="totalStudents">0</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-lg shadow-lg p-6 card-shadow">
-                    <div class="flex items-center">
-                        <div class="bg-purple-100 p-3 rounded-full">
-                            <span class="text-2xl">👨‍🏫</span>
-                        </div>
-                        <div class="mr-4">
-                            <h3 class="text-lg font-semibold text-gray-800">المعلمين المسجلين</h3>
-                            <p class="text-3xl font-bold text-purple-600" id="totalTeachers">0</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-lg shadow-lg p-6 card-shadow">
-                    <div class="flex items-center">
-                        <div class="bg-orange-100 p-3 rounded-full">
-                            <span class="text-2xl">🏫</span>
-                        </div>
-                        <div class="mr-4">
-                            <h3 class="text-lg font-semibold text-gray-800">إجمالي الصفوف</h3>
-                            <p class="text-3xl font-bold text-orange-600">20</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Admin Actions -->
-            <div id="adminActions" class="bg-white rounded-lg shadow-lg p-6 card-shadow mb-6" style="display: none;">
-                <h3 class="text-xl font-bold text-gray-800 mb-4">🔐 إدارة النظام - صلاحيات المسؤول</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <button onclick="exportAllStudentsPDF()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
-                        📄 تصدير جميع بيانات الطلبة PDF
-                    </button>
-                    <button onclick="exportAllTeachersPDF()" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
-                        📄 تصدير جميع بيانات المعلمين PDF
-                    </button>
-                    <button onclick="showAddStudentForm()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
-                        ➕ إضافة طالب جديد
-                    </button>
-                    <button onclick="showTeachersManagement()" class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
-                        👨‍🏫 إدارة المعلمين
-                    </button>
-                </div>
-            </div>
-
-            <!-- Teacher Actions -->
-            <div id="teacherActions" class="bg-white rounded-lg shadow-lg p-6 card-shadow mb-6" style="display: none;">
-                <h3 class="text-xl font-bold text-gray-800 mb-4">🛠️ إدارة الشعبة</h3>
-                <div class="flex flex-wrap gap-4">
-                    <button onclick="showAddStudentForm()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
-                        ➕ إضافة طالب جديد
-                    </button>
-                    <button onclick="exportClassPDF()" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
-                        📄 تصدير PDF شامل للشعبة
-                    </button>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-lg shadow-lg p-6 card-shadow">
-                <h3 class="text-xl font-bold text-gray-800 mb-4">📊 توزيع الطلبة حسب الصفوف</h3>
-                <div id="gradeDistribution" class="space-y-4">
-                    <!-- Grade distribution will be populated here -->
-                </div>
-            </div>
-
-            <!-- Teachers Table (Admin Only) -->
-            <div id="teachersSection" class="bg-white rounded-lg shadow-lg p-6 card-shadow mt-6" style="display: none;">
-                <h3 class="text-xl font-bold text-gray-800 mb-4">👨‍🏫 قائمة المعلمين المسجلين</h3>
-                <div class="overflow-x-auto">
-                    <table class="w-full table-auto">
-                        <thead>
-                            <tr class="bg-gray-50">
-                                <th class="px-4 py-3 text-right font-semibold text-gray-700">اسم المعلم</th>
-                                <th class="px-4 py-3 text-right font-semibold text-gray-700">البريد الإلكتروني</th>
-                                <th class="px-4 py-3 text-right font-semibold text-gray-700">الصف المسؤول عنه</th>
-                                <th class="px-4 py-3 text-right font-semibold text-gray-700">الشعبة</th>
-                                <th class="px-4 py-3 text-right font-semibold text-gray-700">الرقم الوطني</th>
-                                <th class="px-4 py-3 text-right font-semibold text-gray-700">الرقم الوزاري</th>
-                                <th class="px-4 py-3 text-right font-semibold text-gray-700">تاريخ التسجيل</th>
-                            </tr>
-                        </thead>
-                        <tbody id="teachersTable">
-                            <!-- Teachers will be populated here -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Students Table (Only for Teachers and Admins) -->
-            <div id="studentsSection" class="bg-white rounded-lg shadow-lg p-6 card-shadow mt-6" style="display: none;">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-xl font-bold text-gray-800">📋 قائمة الطلبة</h3>
-                    <span id="studentsListTitle" class="text-gray-600 font-semibold"></span>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full table-auto">
-                        <thead>
-                            <tr class="bg-gray-50">
-                                <th class="px-4 py-3 text-right font-semibold text-gray-700">الاسم الكامل</th>
-                                <th class="px-4 py-3 text-right font-semibold text-gray-700">الصف</th>
-                                <th class="px-4 py-3 text-right font-semibold text-gray-700">الشعبة</th>
-                                <th class="px-4 py-3 text-right font-semibold text-gray-700">الرقم الوطني</th>
-                                <th class="px-4 py-3 text-right font-semibold text-gray-700">ولي الأمر</th>
-                                <th class="px-4 py-3 text-right font-semibold text-gray-700">الإجراءات</th>
-                            </tr>
-                        </thead>
-                        <tbody id="studentsTable">
-                            <!-- Students will be populated here -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Success Modal -->
-    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-white rounded-lg p-8 max-w-md mx-4 slide-in">
-            <div class="text-center">
-                <div class="text-6xl mb-4">✅</div>
-                <h3 class="text-xl font-bold text-gray-800 mb-2">تم التسجيل بنجاح!</h3>
-                <p class="text-gray-600 mb-6" id="successMessage"></p>
-                <button onclick="closeModal()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition-colors">
-                    موافق
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Edit Student Modal -->
-    <div id="editStudentModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-white rounded-lg p-8 max-w-4xl mx-4 max-h-screen overflow-y-auto slide-in">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-2xl font-bold text-gray-800">✏️ تعديل معلومات الطالب</h3>
-                <button onclick="closeEditModal()" class="text-gray-500 hover:text-gray-700 text-2xl">×</button>
-            </div>
-            
-            <form id="editStudentForm" class="space-y-6">
-                <input type="hidden" id="editStudentId">
-                
-                <!-- Student Name -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">الاسم الأول</label>
-                        <input type="text" id="editFirstName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">اسم الأب</label>
-                        <input type="text" id="editFatherName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">اسم الجد</label>
-                        <input type="text" id="editGrandfatherName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">اسم العائلة</label>
-                        <input type="text" id="editFamilyName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                    </div>
-                </div>
-
-                <!-- Grade and Section -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">الصف</label>
-                        <select id="editGrade" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all" onchange="updateEditSections()">
-                            <option value="">اختر الصف</option>
-                            <option value="10">الصف العاشر</option>
-                            <option value="11">الصف الحادي عشر أكاديمي</option>
-                            <option value="12">الصف الثاني عشر أكاديمي</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">الشعبة</label>
-                        <select id="editSection" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                            <option value="">اختر الشعبة</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Birth Info -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">تاريخ الولادة</label>
-                        <input type="date" id="editBirthDate" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">مكان الولادة</label>
-                        <input type="text" id="editBirthPlace" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                    </div>
-                </div>
-
-                <!-- Address and National ID -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">مكان السكن</label>
-                        <input type="text" id="editAddress" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">الرقم الوطني</label>
-                        <input type="text" id="editNationalId" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                    </div>
-                </div>
-
-                <!-- Guardian Info -->
-                <div class="bg-gray-50 p-6 rounded-lg">
-                    <h4 class="text-lg font-semibold text-gray-800 mb-4">👨‍👩‍👧‍👦 معلومات ولي الأمر</h4>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">الاسم الأول</label>
-                            <input type="text" id="editGuardianFirstName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">اسم الأب</label>
-                            <input type="text" id="editGuardianFatherName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">اسم الجد</label>
-                            <input type="text" id="editGuardianGrandfatherName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">اسم العائلة</label>
-                            <input type="text" id="editGuardianFamilyName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">عمل ولي الأمر</label>
-                            <input type="text" id="editGuardianJob" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">رقم هاتف ولي الأمر</label>
-                            <input type="tel" id="editGuardianPhone" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex gap-4">
-                    <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-lg transition-colors">
-                        💾 حفظ التعديلات
-                    </button>
-                    <button type="button" onclick="closeEditModal()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-4 px-6 rounded-lg transition-colors">
-                        ❌ إلغاء
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Add Student Modal for Teachers -->
-    <div id="addStudentModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-white rounded-lg p-8 max-w-4xl mx-4 max-h-screen overflow-y-auto slide-in">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-2xl font-bold text-gray-800">➕ إضافة طالب جديد للشعبة</h3>
-                <button onclick="closeAddModal()" class="text-gray-500 hover:text-gray-700 text-2xl">×</button>
-            </div>
-            
-            <form id="addStudentByTeacherForm" class="space-y-6">
-                <!-- Same form fields as student registration but pre-filled with teacher's class -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">الاسم الأول</label>
-                        <input type="text" id="addFirstName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">اسم الأب</label>
-                        <input type="text" id="addFatherName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">اسم الجد</label>
-                        <input type="text" id="addGrandfatherName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">اسم العائلة</label>
-                        <input type="text" id="addFamilyName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">تاريخ الولادة</label>
-                        <input type="date" id="addBirthDate" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">مكان الولادة</label>
-                        <input type="text" id="addBirthPlace" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">مكان السكن</label>
-                        <input type="text" id="addAddress" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">الرقم الوطني</label>
-                        <input type="text" id="addNationalId" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                    </div>
-                </div>
-
-                <div class="bg-gray-50 p-6 rounded-lg">
-                    <h4 class="text-lg font-semibold text-gray-800 mb-4">👨‍👩‍👧‍👦 معلومات ولي الأمر</h4>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">الاسم الأول</label>
-                            <input type="text" id="addGuardianFirstName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">اسم الأب</label>
-                            <input type="text" id="addGuardianFatherName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">اسم الجد</label>
-                            <input type="text" id="addGuardianGrandfatherName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">اسم العائلة</label>
-                            <input type="text" id="addGuardianFamilyName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">عمل ولي الأمر</label>
-                            <input type="text" id="addGuardianJob" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">رقم هاتف ولي الأمر</label>
-                            <input type="tel" id="addGuardianPhone" required class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus transition-all">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex gap-4">
-                    <button type="submit" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-lg transition-colors">
-                        ➕ إضافة الطالب
-                    </button>
-                    <button type="button" onclick="closeAddModal()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-4 px-6 rounded-lg transition-colors">
-                        ❌ إلغاء
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        // Data storage
-        let students = JSON.parse(localStorage.getItem('students') || '[]');
-        let teachers = JSON.parse(localStorage.getItem('teachers') || '[]');
-        let currentTeacher = JSON.parse(localStorage.getItem('currentTeacher') || 'null');
-        let currentAdmin = JSON.parse(localStorage.getItem('currentAdmin') || 'null');
-
-        // Predefined admin accounts
-        const adminAccounts = {
-            'admin1': { username: 'admin1', password: 'password123', name: 'المسؤول الأول' },
-            'admin2': { username: 'admin2', password: 'password123', name: 'المسؤول الثاني' },
-            'admin3': { username: 'admin3', password: 'password123', name: 'المسؤول الثالث' }
-        };
-
-        // Grade and section configuration
-        const gradeConfig = {
-            '10': ['أ', 'ب', 'ج', 'د'],
-            '11': ['أ', 'ب', 'ج', 'د', 'هـ', 'و', 'ز', 'ح', 'ط', 'ي'],
-            '12': ['أ', 'ب', 'ج', 'د', 'هـ', 'و']
-        };
-
-        // Tab switching
-        function showTab(tabName) {
-            // Hide all tabs
-            document.getElementById('studentForm').classList.add('hidden');
-            document.getElementById('teacherForm').classList.add('hidden');
-            document.getElementById('adminForm').classList.add('hidden');
-            document.getElementById('dashboard').classList.add('hidden');
-
-            // Remove active class from all tab buttons
-            document.getElementById('studentTab').className = 'flex-1 py-4 px-6 text-center font-semibold text-gray-600 hover:text-blue-600 hover:bg-gray-50 transition-colors';
-            document.getElementById('teacherTab').className = 'flex-1 py-4 px-6 text-center font-semibold text-gray-600 hover:text-blue-600 hover:bg-gray-50 transition-colors';
-            document.getElementById('adminTab').className = 'flex-1 py-4 px-6 text-center font-semibold text-gray-600 hover:text-blue-600 hover:bg-gray-50 transition-colors';
-            document.getElementById('dashboardTab').className = 'flex-1 py-4 px-6 text-center font-semibold text-gray-600 hover:text-blue-600 hover:bg-gray-50 transition-colors';
-
-            // Show selected tab
-            if (tabName === 'student') {
-                document.getElementById('studentForm').classList.remove('hidden');
-                document.getElementById('studentTab').className = 'flex-1 py-4 px-6 text-center font-semibold text-blue-600 border-b-2 border-blue-600 bg-blue-50';
-            } else if (tabName === 'teacher') {
-                document.getElementById('teacherForm').classList.remove('hidden');
-                document.getElementById('teacherTab').className = 'flex-1 py-4 px-6 text-center font-semibold text-blue-600 border-b-2 border-blue-600 bg-blue-50';
-            } else if (tabName === 'admin') {
-                document.getElementById('adminForm').classList.remove('hidden');
-                document.getElementById('adminTab').className = 'flex-1 py-4 px-6 text-center font-semibold text-blue-600 border-b-2 border-blue-600 bg-blue-50';
-            } else if (tabName === 'dashboard') {
-                document.getElementById('dashboard').classList.remove('hidden');
-                document.getElementById('dashboardTab').className = 'flex-1 py-4 px-6 text-center font-semibold text-blue-600 border-b-2 border-blue-600 bg-blue-50';
-                // Always refresh dashboard when switching to it
-                setTimeout(() => updateDashboard(), 100);
-            }
-        }
-
-        // Update sections based on selected grade
-        function updateSections() {
-            const grade = document.getElementById('grade').value;
-            const sectionSelect = document.getElementById('section');
-            
-            sectionSelect.innerHTML = '<option value="">اختر الشعبة</option>';
-            
-            if (grade && gradeConfig[grade]) {
-                gradeConfig[grade].forEach(section => {
-                    const option = document.createElement('option');
-                    option.value = section;
-                    option.textContent = `شعبة ${section}`;
-                    sectionSelect.appendChild(option);
-                });
-            }
-        }
-
-        // Update teacher sections
-        function updateTeacherSections() {
-            const grade = document.getElementById('teacherGrade').value;
-            const sectionSelect = document.getElementById('teacherSection');
-            
-            sectionSelect.innerHTML = '<option value="">اختر الشعبة</option>';
-            
-            if (grade && gradeConfig[grade]) {
-                gradeConfig[grade].forEach(section => {
-                    const option = document.createElement('option');
-                    option.value = section;
-                    option.textContent = `شعبة ${section}`;
-                    sectionSelect.appendChild(option);
-                });
-            }
-        }
-
-        // Google Sheets configuration - تم ربط النظام بـ Google Sheets
-        const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzOMOotvH8Clqj_gJsXPGkg-Pr05YDVpu_BSBnbkNnqMItluZ0W-H9G7F9E02PQ538qWQ/exec';
-
-        // Student registration form handler
-        document.getElementById('studentRegistrationForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const studentData = {
-                id: Date.now(),
-                firstName: document.getElementById('firstName').value,
-                fatherName: document.getElementById('fatherName').value,
-                grandfatherName: document.getElementById('grandfatherName').value,
-                familyName: document.getElementById('familyName').value,
-                grade: document.getElementById('grade').value,
-                section: document.getElementById('section').value,
-                birthDate: document.getElementById('birthDate').value,
-                birthPlace: document.getElementById('birthPlace').value,
-                address: document.getElementById('address').value,
-                nationalId: document.getElementById('nationalId').value,
-                guardianFirstName: document.getElementById('guardianFirstName').value,
-                guardianFatherName: document.getElementById('guardianFatherName').value,
-                grandfatherName: document.getElementById('guardianGrandfatherName').value,
-                guardianFamilyName: document.getElementById('guardianFamilyName').value,
-                guardianJob: document.getElementById('guardianJob').value,
-                guardianPhone: document.getElementById('guardianPhone').value,
-                registrationDate: new Date().toLocaleDateString('en-GB')
-            };
-
-            // Save locally as backup
-            students.push(studentData);
-            localStorage.setItem('students', JSON.stringify(students));
-
-            // Send to Google Sheets with better error handling
-            sendToGoogleSheets(studentData);
-
-            // Find responsible teacher and simulate sending data
-            const responsibleTeacher = teachers.find(t => t.grade === studentData.grade && t.section === studentData.section);
-            if (responsibleTeacher) {
-                simulateEmailSend(responsibleTeacher, studentData);
-            }
-
-            showSuccessModal(`تم تسجيل الطالب ${studentData.firstName} ${studentData.fatherName} ${studentData.grandfatherName} ${studentData.familyName} بنجاح في الصف ${getGradeName(studentData.grade)} شعبة ${studentData.section}`);
-            
-            // Update dashboard immediately
-            updateDashboard();
-            
-            // Reset form
-            this.reset();
-            document.getElementById('section').innerHTML = '<option value="">اختر الشعبة أولاً</option>';
-        });
-
-        // Teacher registration form handler
-        document.getElementById('teacherRegistrationForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const teacherData = {
-                id: Date.now(),
-                name: document.getElementById('newTeacherName').value,
-                email: document.getElementById('newTeacherEmail').value,
-                password: document.getElementById('newTeacherPassword').value,
-                grade: document.getElementById('teacherGrade').value,
-                section: document.getElementById('teacherSection').value,
-                nationalId: document.getElementById('teacherNationalId').value,
-                ministryId: document.getElementById('teacherMinistryId').value,
-                registrationDate: new Date().toLocaleDateString('en-GB')
-            };
-
-            // Check if teacher already exists
-            if (teachers.find(t => t.email === teacherData.email)) {
-                alert('هذا البريد الإلكتروني مسجل مسبقاً');
-                return;
-            }
-
-            teachers.push(teacherData);
-            localStorage.setItem('teachers', JSON.stringify(teachers));
-
-            // Send teacher data to Google Sheets
-            sendTeacherToGoogleSheets(teacherData);
-
-            showSuccessModal(`تم تسجيل المعلم ${teacherData.name} بنجاح كمسؤول عن الصف ${getGradeName(teacherData.grade)} شعبة ${teacherData.section}`);
-            
-            // Update dashboard immediately
-            updateDashboard();
-            
-            // Reset form
-            this.reset();
-            document.getElementById('teacherSection').innerHTML = '<option value="">اختر الشعبة أولاً</option>';
-        });
-
-        // Teacher login form handler
-        document.getElementById('teacherLoginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('teacherEmail').value;
-            const password = document.getElementById('teacherPassword').value;
-
-            const teacher = teachers.find(t => t.email === email && t.password === password);
-            
-            if (teacher) {
-                currentTeacher = teacher;
-                currentAdmin = null; // Clear admin session
-                localStorage.setItem('currentTeacher', JSON.stringify(teacher));
-                localStorage.removeItem('currentAdmin');
-                showSuccessModal(`مرحباً ${teacher.name}، تم تسجيل الدخول بنجاح. أنت مسؤول عن الصف ${getGradeName(teacher.grade)} شعبة ${teacher.section}`);
-                showTab('dashboard');
-            } else {
-                alert('البريد الإلكتروني أو كلمة المرور غير صحيحة');
-            }
-        });
-
-        // Admin login form handler
-        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('adminUsername').value.trim();
-            const password = document.getElementById('adminPassword').value.trim();
-
-            console.log('محاولة تسجيل دخول:', username, password); // للتشخيص
-
-            const admin = adminAccounts[username];
-            
-            if (admin && admin.password === password) {
-                currentAdmin = admin;
-                currentTeacher = null; // Clear teacher session
-                localStorage.setItem('currentAdmin', JSON.stringify(admin));
-                localStorage.removeItem('currentTeacher');
-                
-                // إغلاق النموذج وإظهار رسالة النجاح
-                document.getElementById('adminUsername').value = '';
-                document.getElementById('adminPassword').value = '';
-                
-                showSuccessModal(`مرحباً ${admin.name}، تم تسجيل الدخول بنجاح كمسؤول النظام`);
-                
-                // الانتقال إلى لوحة التحكم بعد إغلاق الرسالة
-                setTimeout(() => {
-                    showTab('dashboard');
-                }, 1000);
-            } else {
-                alert(`خطأ في تسجيل الدخول!\nاسم المستخدم: ${username}\nكلمة المرور: ${password}\nتأكد من صحة البيانات`);
-            }
-        });
-
-        // Send data to Google Sheets - محسّن للعمل مع GitHub Pages
-        function sendToGoogleSheets(studentData) {
-            // إذا لم يتم تعيين رابط Google Sheets، لا ترسل البيانات
-            if (GOOGLE_SHEETS_URL === 'YOUR_GOOGLE_SHEETS_WEB_APP_URL_HERE') {
-                console.log('⚠️ تحذير: لم يتم تكوين رابط Google Sheets بعد');
-                showNotification('⚠️ تحذير: لم يتم ربط النظام بـ Google Sheets بعد. البيانات محفوظة محلياً فقط.', 'warning');
-                return;
-            }
-
-            console.log('🚀 بدء إرسال البيانات إلى Google Sheets...');
-            console.log('📊 البيانات المرسلة:', studentData);
-            console.log('🔗 الرابط المستخدم:', GOOGLE_SHEETS_URL);
-
-            // Show loading indicator
-            showNotification('⏳ جاري إرسال البيانات إلى Google Sheets...', 'loading');
-
-            // إنشاء البيانات للإرسال
-            const formData = new URLSearchParams();
-            formData.append('type', 'student'); // تحديد نوع البيانات
-            formData.append('firstName', studentData.firstName);
-            formData.append('fatherName', studentData.fatherName);
-            formData.append('grandfatherName', studentData.grandfatherName);
-            formData.append('familyName', studentData.familyName);
-            formData.append('grade', studentData.grade);
-            formData.append('section', studentData.section);
-            formData.append('birthDate', studentData.birthDate);
-            formData.append('birthPlace', studentData.birthPlace);
-            formData.append('address', studentData.address);
-            formData.append('nationalId', studentData.nationalId);
-            formData.append('guardianFirstName', studentData.guardianFirstName);
-            formData.append('guardianFatherName', studentData.guardianFatherName);
-            formData.append('guardianGrandfatherName', studentData.guardianGrandfatherName);
-            formData.append('guardianFamilyName', studentData.guardianFamilyName);
-            formData.append('guardianJob', studentData.guardianJob);
-            formData.append('guardianPhone', studentData.guardianPhone);
-            formData.append('registrationDate', studentData.registrationDate);
-
-            // الطريقة الأولى: استخدام fetch مع معالجة أفضل للأخطاء
-            fetch(GOOGLE_SHEETS_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: formData,
-                mode: 'no-cors' // مهم لـ GitHub Pages
-            })
-            .then(() => {
-                console.log('✅ تم إرسال البيانات بنجاح');
-                showNotification('✅ تم إرسال البيانات إلى Google Sheets بنجاح!', 'success');
-            })
-            .catch(error => {
-                console.error('❌ خطأ في إرسال البيانات:', error);
-                // حتى لو فشل fetch، قد تكون البيانات وصلت (بسبب no-cors)
-                showNotification('📤 تم إرسال البيانات. تحقق من Google Sheets للتأكد.', 'info');
-            });
-
-            // الطريقة الثانية: استخدام form submission كطريقة احتياطية
-            setTimeout(() => {
-                try {
-                    const iframe = document.createElement('iframe');
-                    iframe.style.display = 'none';
-                    iframe.name = 'hiddenFrame';
-                    document.body.appendChild(iframe);
-
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = GOOGLE_SHEETS_URL;
-                    form.target = 'hiddenFrame';
-                    form.style.display = 'none';
-
-                    // إضافة جميع الحقول
-                    const fields = {
-                        type: 'student',
-                        firstName: studentData.firstName,
-                        fatherName: studentData.fatherName,
-                        grandfatherName: studentData.grandfatherName,
-                        familyName: studentData.familyName,
-                        grade: studentData.grade,
-                        section: studentData.section,
-                        birthDate: studentData.birthDate,
-                        birthPlace: studentData.birthPlace,
-                        address: studentData.address,
-                        nationalId: studentData.nationalId,
-                        guardianFirstName: studentData.guardianFirstName,
-                        guardianFatherName: studentData.guardianFatherName,
-                        guardianGrandfatherName: studentData.guardianGrandfatherName,
-                        guardianFamilyName: studentData.guardianFamilyName,
-                        guardianJob: studentData.guardianJob,
-                        guardianPhone: studentData.guardianPhone,
-                        registrationDate: studentData.registrationDate
-                    };
-
-                    Object.keys(fields).forEach(key => {
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = key;
-                        input.value = fields[key] || '';
-                        form.appendChild(input);
-                    });
-
-                    document.body.appendChild(form);
-                    form.submit();
-
-                    // تنظيف العناصر بعد الإرسال
-                    setTimeout(() => {
-                        if (document.body.contains(form)) document.body.removeChild(form);
-                        if (document.body.contains(iframe)) document.body.removeChild(iframe);
-                    }, 3000);
-
-                    console.log('📤 تم إرسال البيانات عبر النموذج الاحتياطي');
-                } catch (error) {
-                    console.error('خطأ في الطريقة الاحتياطية:', error);
-                }
-            }, 1000);
-        }
-
-        // Send teacher data to Google Sheets
-        function sendTeacherToGoogleSheets(teacherData) {
-            // إذا لم يتم تعيين رابط Google Sheets، لا ترسل البيانات
-            if (GOOGLE_SHEETS_URL === 'YOUR_GOOGLE_SHEETS_WEB_APP_URL_HERE') {
-                console.log('⚠️ تحذير: لم يتم تكوين رابط Google Sheets بعد');
-                showNotification('⚠️ تحذير: لم يتم ربط النظام بـ Google Sheets بعد. البيانات محفوظة محلياً فقط.', 'warning');
-                return;
-            }
-
-            console.log('🚀 بدء إرسال بيانات المعلم إلى Google Sheets...');
-            console.log('👨‍🏫 البيانات المرسلة:', teacherData);
-
-            // Show loading indicator
-            showNotification('⏳ جاري إرسال بيانات المعلم إلى Google Sheets...', 'loading');
-
-            // إنشاء البيانات للإرسال
-            const formData = new URLSearchParams();
-            formData.append('type', 'teacher'); // تحديد نوع البيانات
-            formData.append('teacherName', teacherData.name);
-            formData.append('teacherEmail', teacherData.email);
-            formData.append('teacherGrade', teacherData.grade);
-            formData.append('teacherSection', teacherData.section);
-            formData.append('teacherNationalId', teacherData.nationalId);
-            formData.append('teacherMinistryId', teacherData.ministryId);
-            formData.append('teacherRegistrationDate', teacherData.registrationDate);
-
-            // الطريقة الأولى: استخدام fetch
-            fetch(GOOGLE_SHEETS_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: formData,
-                mode: 'no-cors'
-            })
-            .then(() => {
-                console.log('✅ تم إرسال بيانات المعلم بنجاح');
-                showNotification('✅ تم إرسال بيانات المعلم إلى Google Sheets بنجاح!', 'success');
-            })
-            .catch(error => {
-                console.error('❌ خطأ في إرسال بيانات المعلم:', error);
-                showNotification('📤 تم إرسال بيانات المعلم. تحقق من Google Sheets للتأكد.', 'info');
-            });
-
-            // الطريقة الثانية: استخدام form submission كطريقة احتياطية
-            setTimeout(() => {
-                try {
-                    const iframe = document.createElement('iframe');
-                    iframe.style.display = 'none';
-                    iframe.name = 'hiddenTeacherFrame';
-                    document.body.appendChild(iframe);
-
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = GOOGLE_SHEETS_URL;
-                    form.target = 'hiddenTeacherFrame';
-                    form.style.display = 'none';
-
-                    // إضافة جميع الحقول
-                    const fields = {
-                        type: 'teacher',
-                        teacherName: teacherData.name,
-                        teacherEmail: teacherData.email,
-                        teacherGrade: teacherData.grade,
-                        teacherSection: teacherData.section,
-                        teacherNationalId: teacherData.nationalId,
-                        teacherMinistryId: teacherData.ministryId,
-                        teacherRegistrationDate: teacherData.registrationDate
-                    };
-
-                    Object.keys(fields).forEach(key => {
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = key;
-                        input.value = fields[key] || '';
-                        form.appendChild(input);
-                    });
-
-                    document.body.appendChild(form);
-                    form.submit();
-
-                    // تنظيف العناصر بعد الإرسال
-                    setTimeout(() => {
-                        if (document.body.contains(form)) document.body.removeChild(form);
-                        if (document.body.contains(iframe)) document.body.removeChild(iframe);
-                    }, 3000);
-
-                    console.log('📤 تم إرسال بيانات المعلم عبر النموذج الاحتياطي');
-                } catch (error) {
-                    console.error('خطأ في الطريقة الاحتياطية للمعلم:', error);
-                }
-            }, 1000);
-        }
-
-        // دالة لإظهار الإشعارات
-        function showNotification(message, type = 'info') {
-            // إزالة الإشعارات السابقة
-            const existingNotifications = document.querySelectorAll('.notification');
-            existingNotifications.forEach(notification => notification.remove());
-
-            const notification = document.createElement('div');
-            notification.className = 'notification fixed top-4 right-4 px-6 py-3 rounded-lg text-white font-semibold z-50 shadow-lg';
-            
-            // تحديد لون الإشعار حسب النوع
-            switch(type) {
-                case 'success':
-                    notification.classList.add('bg-green-500');
-                    break;
-                case 'error':
-                    notification.classList.add('bg-red-500');
-                    break;
-                case 'warning':
-                    notification.classList.add('bg-yellow-500');
-                    break;
-                case 'loading':
-                    notification.classList.add('bg-blue-500');
-                    break;
-                default:
-                    notification.classList.add('bg-gray-500');
-            }
-            
-            notification.textContent = message;
-            document.body.appendChild(notification);
-
-            // إزالة الإشعار تلقائياً
-            const duration = type === 'loading' ? 5000 : 4000;
-            setTimeout(() => {
-                if (document.body.contains(notification)) {
-                    notification.remove();
-                }
-            }, duration);
-        }
-
-        // Simulate email sending
-        function simulateEmailSend(teacher, studentData) {
-            console.log(`📧 إرسال بيانات الطالب إلى المعلم ${teacher.name} على البريد: ${teacher.email}`);
-            console.log('بيانات الطالب:', studentData);
-            
-            // In a real application, this would integrate with Google Sheets API
-            // and send actual emails with the student data
-        }
-
-        // Get grade name in Arabic
-        function getGradeName(grade) {
-            const gradeNames = {
-                '10': 'العاشر',
-                '11': 'الحادي عشر أكاديمي',
-                '12': 'الثاني عشر أكاديمي'
-            };
-            return gradeNames[grade] || grade;
-        }
-
-        // Update dashboard
-        function updateDashboard() {
-            document.getElementById('totalStudents').textContent = students.length;
-            document.getElementById('totalTeachers').textContent = teachers.length;
-
-            // Show admin info if logged in as admin
-            if (currentAdmin) {
-                document.getElementById('adminInfo').style.display = 'block';
-                document.getElementById('adminActions').style.display = 'block';
-                document.getElementById('teacherInfo').style.display = 'none';
-                document.getElementById('teacherActions').style.display = 'none';
-                document.getElementById('teachersSection').style.display = 'block';
-                document.getElementById('studentsSection').style.display = 'block';
-                
-                document.getElementById('adminName').textContent = currentAdmin.name;
-                document.getElementById('myStudents').textContent = students.length;
-                document.getElementById('studentsListTitle').textContent = 'جميع الطلبة المسجلين - عرض المسؤول';
-                
-                updateStudentsTable(students, true); // Admin can edit all students
-                updateTeachersTable();
-            }
-            // Show teacher info if logged in as teacher
-            else if (currentTeacher) {
-                document.getElementById('adminInfo').style.display = 'none';
-                document.getElementById('adminActions').style.display = 'none';
-                document.getElementById('teacherInfo').style.display = 'block';
-                document.getElementById('teacherActions').style.display = 'block';
-                document.getElementById('teachersSection').style.display = 'none';
-                document.getElementById('studentsSection').style.display = 'block';
-                
-                document.getElementById('teacherName').textContent = currentTeacher.name;
-                document.getElementById('teacherGradeInfo').textContent = getGradeName(currentTeacher.grade);
-                document.getElementById('teacherSectionInfo').textContent = currentTeacher.section;
-
-                // Show only teacher's students
-                const myStudents = students.filter(s => s.grade === currentTeacher.grade && s.section === currentTeacher.section);
-                document.getElementById('myStudents').textContent = myStudents.length;
-                document.getElementById('studentsListTitle').textContent = `طلبة الصف ${getGradeName(currentTeacher.grade)} - شعبة ${currentTeacher.section}`;
-                
-                updateStudentsTable(myStudents, true);
-            } 
-            // Public view (no login) - Hide students completely
-            else {
-                document.getElementById('adminInfo').style.display = 'none';
-                document.getElementById('adminActions').style.display = 'none';
-                document.getElementById('teacherInfo').style.display = 'none';
-                document.getElementById('teacherActions').style.display = 'none';
-                document.getElementById('teachersSection').style.display = 'none';
-                document.getElementById('studentsSection').style.display = 'none';
-                document.getElementById('myStudents').textContent = '0';
-            }
-
-            // Update grade distribution
-            const gradeDistribution = {};
-            students.forEach(student => {
-                const key = `${student.grade}-${student.section}`;
-                gradeDistribution[key] = (gradeDistribution[key] || 0) + 1;
-            });
-
-            const distributionDiv = document.getElementById('gradeDistribution');
-            distributionDiv.innerHTML = '';
-
-            Object.keys(gradeDistribution).forEach(key => {
-                const [grade, section] = key.split('-');
-                const count = gradeDistribution[key];
-                
-                const div = document.createElement('div');
-                div.className = 'flex justify-between items-center p-3 bg-gray-50 rounded-lg';
-                div.innerHTML = `
-                    <span class="font-semibold">الصف ${getGradeName(grade)} - شعبة ${section}</span>
-                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-bold">${count} طالب</span>
-                `;
-                distributionDiv.appendChild(div);
-            });
-        }
-
-        // Update students table
-        function updateStudentsTable(studentsToShow, isTeacher) {
-            const studentsTable = document.getElementById('studentsTable');
-            studentsTable.innerHTML = '';
-
-            studentsToShow.forEach(student => {
-                const row = document.createElement('tr');
-                row.className = 'border-b hover:bg-gray-50';
-                
-                let actionsHtml = `
-                    <button onclick="exportStudentData(${student.id})" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm mr-2">
-                        📊 تصدير
-                    </button>
-                `;
-                
-                if (isTeacher) {
-                    actionsHtml += `
-                        <button onclick="editStudent(${student.id})" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm mr-2">
-                            ✏️ تعديل
-                        </button>
-                        <button onclick="deleteStudent(${student.id})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">
-                            🗑️ حذف
-                        </button>
-                    `;
-                }
-                
-                row.innerHTML = `
-                    <td class="px-4 py-3">${student.firstName} ${student.fatherName} ${student.grandfatherName} ${student.familyName}</td>
-                    <td class="px-4 py-3">${getGradeName(student.grade)}</td>
-                    <td class="px-4 py-3">${student.section}</td>
-                    <td class="px-4 py-3">${student.nationalId}</td>
-                    <td class="px-4 py-3">${student.guardianFirstName} ${student.guardianFamilyName}</td>
-                    <td class="px-4 py-3">${actionsHtml}</td>
-                `;
-                studentsTable.appendChild(row);
-            });
-        }
-
-        // Export student data
-        function exportStudentData(studentId) {
-            const student = students.find(s => s.id === studentId);
-            if (!student) return;
-
-            const csvContent = `الاسم الكامل,الصف,الشعبة,تاريخ الولادة,مكان الولادة,مكان السكن,الرقم الوطني,ولي الأمر,عمل ولي الأمر,هاتف ولي الأمر
-"${student.firstName} ${student.fatherName} ${student.grandfatherName} ${student.familyName}","${getGradeName(student.grade)}","${student.section}","${student.birthDate}","${student.birthPlace}","${student.address}","${student.nationalId}","${student.guardianFirstName} ${student.guardianFatherName} ${student.guardianGrandfatherName} ${student.guardianFamilyName}","${student.guardianJob}","${student.guardianPhone}"`;
-
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            link.setAttribute('href', url);
-            link.setAttribute('download', `بيانات_الطالب_${student.firstName}_${student.familyName}.csv`);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        // Show success modal
-        function showSuccessModal(message) {
-            document.getElementById('successMessage').textContent = message;
-            document.getElementById('successModal').classList.remove('hidden');
-            document.getElementById('successModal').classList.add('flex');
-        }
-
-        // Close modal
-        function closeModal() {
-            document.getElementById('successModal').classList.add('hidden');
-            document.getElementById('successModal').classList.remove('flex');
-            
-            // Update dashboard immediately when closing modal
-            updateDashboard();
-            
-            // إذا كان هناك مسؤول مسجل دخول، انتقل إلى لوحة التحكم
-            if (currentAdmin || currentTeacher) {
-                showTab('dashboard');
-            }
-        }
-
-        // Update teachers table (Admin only)
-        function updateTeachersTable() {
-            if (!currentAdmin) return;
-            
-            const teachersTable = document.getElementById('teachersTable');
-            teachersTable.innerHTML = '';
-
-            teachers.forEach(teacher => {
-                const row = document.createElement('tr');
-                row.className = 'border-b hover:bg-gray-50';
-                row.innerHTML = `
-                    <td class="px-4 py-3">${teacher.name}</td>
-                    <td class="px-4 py-3">${teacher.email}</td>
-                    <td class="px-4 py-3">${getGradeName(teacher.grade)}</td>
-                    <td class="px-4 py-3">${teacher.section}</td>
-                    <td class="px-4 py-3">${teacher.nationalId || 'غير محدد'}</td>
-                    <td class="px-4 py-3">${teacher.ministryId || 'غير محدد'}</td>
-                    <td class="px-4 py-3">${teacher.registrationDate}</td>
-                `;
-                teachersTable.appendChild(row);
-            });
-        }
-
-        // Export all students PDF (Admin only)
-        function exportAllStudentsPDF() {
-            if (!currentAdmin) {
-                alert('هذه الميزة متاحة للمسؤولين فقط');
-                return;
-            }
-
-            if (students.length === 0) {
-                alert('لا يوجد طلبة مسجلين لتصديرهم');
-                return;
-            }
-
-            let csvContent = 'الاسم الكامل,الصف,الشعبة,تاريخ الولادة,مكان الولادة,مكان السكن,الرقم الوطني,ولي الأمر,عمل ولي الأمر,هاتف ولي الأمر,تاريخ التسجيل\n';
-            
-            students.forEach(student => {
-                csvContent += `"${student.firstName} ${student.fatherName} ${student.grandfatherName} ${student.familyName}","${getGradeName(student.grade)}","${student.section}","${student.birthDate}","${student.birthPlace}","${student.address}","${student.nationalId}","${student.guardianFirstName} ${student.guardianFatherName} ${student.guardianGrandfatherName} ${student.guardianFamilyName}","${student.guardianJob}","${student.guardianPhone}","${student.registrationDate}"\n`;
-            });
-
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            link.setAttribute('href', url);
-            link.setAttribute('download', `جميع_بيانات_الطلبة_${new Date().toLocaleDateString('ar-SA')}.csv`);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            showSuccessModal(`تم تصدير بيانات ${students.length} طالب بنجاح`);
-        }
-
-        // Export all teachers PDF (Admin only)
-        function exportAllTeachersPDF() {
-            if (!currentAdmin) {
-                alert('هذه الميزة متاحة للمسؤولين فقط');
-                return;
-            }
-
-            if (teachers.length === 0) {
-                alert('لا يوجد معلمين مسجلين لتصديرهم');
-                return;
-            }
-
-            let csvContent = 'اسم المعلم,البريد الإلكتروني,الصف المسؤول عنه,الشعبة,الرقم الوطني,الرقم الوزاري,تاريخ التسجيل\n';
-            
-            teachers.forEach(teacher => {
-                csvContent += `"${teacher.name}","${teacher.email}","${getGradeName(teacher.grade)}","${teacher.section}","${teacher.nationalId || 'غير محدد'}","${teacher.ministryId || 'غير محدد'}","${teacher.registrationDate}"\n`;
-            });
-
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            link.setAttribute('href', url);
-            link.setAttribute('download', `جميع_بيانات_المعلمين_${new Date().toLocaleDateString('ar-SA')}.csv`);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            showSuccessModal(`تم تصدير بيانات ${teachers.length} معلم بنجاح`);
-        }
-
-        // Show teachers management (placeholder for future features)
-        function showTeachersManagement() {
-            showSuccessModal('ميزة إدارة المعلمين ستكون متاحة قريباً');
-        }
-
-        // Logout (works for both teacher and admin)
-        function logout() {
-            currentTeacher = null;
-            currentAdmin = null;
-            localStorage.removeItem('currentTeacher');
-            localStorage.removeItem('currentAdmin');
-            showSuccessModal('تم تسجيل الخروج بنجاح');
-            updateDashboard();
-        }
-
-        // Edit student
-        function editStudent(studentId) {
-            const student = students.find(s => s.id === studentId);
-            if (!student) return;
-
-            // Fill edit form
-            document.getElementById('editStudentId').value = student.id;
-            document.getElementById('editFirstName').value = student.firstName;
-            document.getElementById('editFatherName').value = student.fatherName;
-            document.getElementById('editGrandfatherName').value = student.grandfatherName;
-            document.getElementById('editFamilyName').value = student.familyName;
-            document.getElementById('editGrade').value = student.grade;
-            document.getElementById('editBirthDate').value = student.birthDate;
-            document.getElementById('editBirthPlace').value = student.birthPlace;
-            document.getElementById('editAddress').value = student.address;
-            document.getElementById('editNationalId').value = student.nationalId;
-            document.getElementById('editGuardianFirstName').value = student.guardianFirstName;
-            document.getElementById('editGuardianFatherName').value = student.guardianFatherName;
-            document.getElementById('editGuardianGrandfatherName').value = student.guardianGrandfatherName;
-            document.getElementById('editGuardianFamilyName').value = student.guardianFamilyName;
-            document.getElementById('editGuardianJob').value = student.guardianJob;
-            document.getElementById('editGuardianPhone').value = student.guardianPhone;
-
-            // Update sections for edit form
-            updateEditSections();
-            setTimeout(() => {
-                document.getElementById('editSection').value = student.section;
-            }, 100);
-
-            // Show modal
-            document.getElementById('editStudentModal').classList.remove('hidden');
-            document.getElementById('editStudentModal').classList.add('flex');
-        }
-
-        // Update edit sections
-        function updateEditSections() {
-            const grade = document.getElementById('editGrade').value;
-            const sectionSelect = document.getElementById('editSection');
-            
-            sectionSelect.innerHTML = '<option value="">اختر الشعبة</option>';
-            
-            if (grade && gradeConfig[grade]) {
-                gradeConfig[grade].forEach(section => {
-                    const option = document.createElement('option');
-                    option.value = section;
-                    option.textContent = `شعبة ${section}`;
-                    sectionSelect.appendChild(option);
-                });
-            }
-        }
-
-        // Close edit modal
-        function closeEditModal() {
-            document.getElementById('editStudentModal').classList.add('hidden');
-            document.getElementById('editStudentModal').classList.remove('flex');
-        }
-
-        // Edit student form handler
-        document.getElementById('editStudentForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const studentId = parseInt(document.getElementById('editStudentId').value);
-            const studentIndex = students.findIndex(s => s.id === studentId);
-            
-            if (studentIndex === -1) return;
-
-            // Update student data
-            students[studentIndex] = {
-                ...students[studentIndex],
-                firstName: document.getElementById('editFirstName').value,
-                fatherName: document.getElementById('editFatherName').value,
-                grandfatherName: document.getElementById('editGrandfatherName').value,
-                familyName: document.getElementById('editFamilyName').value,
-                grade: document.getElementById('editGrade').value,
-                section: document.getElementById('editSection').value,
-                birthDate: document.getElementById('editBirthDate').value,
-                birthPlace: document.getElementById('editBirthPlace').value,
-                address: document.getElementById('editAddress').value,
-                nationalId: document.getElementById('editNationalId').value,
-                guardianFirstName: document.getElementById('editGuardianFirstName').value,
-                guardianFatherName: document.getElementById('editGuardianFatherName').value,
-                guardianGrandfatherName: document.getElementById('editGuardianGrandfatherName').value,
-                guardianFamilyName: document.getElementById('editGuardianFamilyName').value,
-                guardianJob: document.getElementById('editGuardianJob').value,
-                guardianPhone: document.getElementById('editGuardianPhone').value
-            };
-
-            localStorage.setItem('students', JSON.stringify(students));
-            closeEditModal();
-            showSuccessModal('تم تحديث معلومات الطالب بنجاح');
-            updateDashboard();
-        });
-
-        // Delete student
-        function deleteStudent(studentId) {
-            const student = students.find(s => s.id === studentId);
-            if (!student) return;
-
-            if (confirm(`هل أنت متأكد من حذف الطالب ${student.firstName} ${student.familyName}؟`)) {
-                students = students.filter(s => s.id !== studentId);
-                localStorage.setItem('students', JSON.stringify(students));
-                showSuccessModal('تم حذف الطالب بنجاح');
-                updateDashboard();
-            }
-        }
-
-        // Show add student form for teachers
-        function showAddStudentForm() {
-            if (!currentTeacher) return;
-            
-            document.getElementById('addStudentModal').classList.remove('hidden');
-            document.getElementById('addStudentModal').classList.add('flex');
-        }
-
-        // Close add modal
-        function closeAddModal() {
-            document.getElementById('addStudentModal').classList.add('hidden');
-            document.getElementById('addStudentModal').classList.remove('flex');
-            document.getElementById('addStudentByTeacherForm').reset();
-        }
-
-        // Add student by teacher form handler
-        document.getElementById('addStudentByTeacherForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            if (!currentTeacher) return;
-
-            const studentData = {
-                id: Date.now(),
-                firstName: document.getElementById('addFirstName').value,
-                fatherName: document.getElementById('addFatherName').value,
-                grandfatherName: document.getElementById('addGrandfatherName').value,
-                familyName: document.getElementById('addFamilyName').value,
-                grade: currentTeacher.grade,
-                section: currentTeacher.section,
-                birthDate: document.getElementById('addBirthDate').value,
-                birthPlace: document.getElementById('addBirthPlace').value,
-                address: document.getElementById('addAddress').value,
-                nationalId: document.getElementById('addNationalId').value,
-                guardianFirstName: document.getElementById('addGuardianFirstName').value,
-                guardianFatherName: document.getElementById('addGuardianFatherName').value,
-                guardianGrandfatherName: document.getElementById('addGuardianGrandfatherName').value,
-                guardianFamilyName: document.getElementById('addGuardianFamilyName').value,
-                guardianJob: document.getElementById('addGuardianJob').value,
-                guardianPhone: document.getElementById('addGuardianPhone').value,
-                registrationDate: new Date().toLocaleDateString('en-GB')
-            };
-
-            students.push(studentData);
-            localStorage.setItem('students', JSON.stringify(students));
-
-            closeAddModal();
-            showSuccessModal(`تم إضافة الطالب ${studentData.firstName} ${studentData.familyName} بنجاح إلى شعبتك`);
-            updateDashboard();
-        });
-
-        // Export class PDF
-        function exportClassPDF() {
-            if (!currentTeacher) return;
-
-            const myStudents = students.filter(s => s.grade === currentTeacher.grade && s.section === currentTeacher.section);
-            
-            if (myStudents.length === 0) {
-                alert('لا يوجد طلبة في شعبتك لتصديرهم');
-                return;
-            }
-
-            // Create comprehensive CSV content for the class
-            let csvContent = 'الاسم الكامل,الصف,الشعبة,تاريخ الولادة,مكان الولادة,مكان السكن,الرقم الوطني,ولي الأمر,عمل ولي الأمر,هاتف ولي الأمر\n';
-            
-            myStudents.forEach(student => {
-                csvContent += `"${student.firstName} ${student.fatherName} ${student.grandfatherName} ${student.familyName}","${getGradeName(student.grade)}","${student.section}","${student.birthDate}","${student.birthPlace}","${student.address}","${student.nationalId}","${student.guardianFirstName} ${student.guardianFatherName} ${student.guardianGrandfatherName} ${student.guardianFamilyName}","${student.guardianJob}","${student.guardianPhone}"\n`;
-            });
-
-            // Create and download file
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            link.setAttribute('href', url);
-            link.setAttribute('download', `قائمة_طلبة_الصف_${getGradeName(currentTeacher.grade)}_شعبة_${currentTeacher.section}.csv`);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            showSuccessModal(`تم تصدير قائمة ${myStudents.length} طالب من شعبتك بنجاح`);
-        }
-
-        // Function to update counters in real-time
-        function updateCounters() {
-            document.getElementById('totalStudents').textContent = students.length;
-            document.getElementById('totalTeachers').textContent = teachers.length;
-            
-            if (currentTeacher) {
-                const myStudents = students.filter(s => s.grade === currentTeacher.grade && s.section === currentTeacher.section);
-                document.getElementById('myStudents').textContent = myStudents.length;
-            } else if (currentAdmin) {
-                document.getElementById('myStudents').textContent = students.length;
-            }
-        }
-
-        // Initialize dashboard on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            updateDashboard();
-            
-            // Update counters every 2 seconds for real-time feel
-            setInterval(updateCounters, 2000);
-        });
-    </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96e64941a50f32ab',t:'MTc1NTA2NzkwOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
-</html>
